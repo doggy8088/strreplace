@@ -7,7 +7,7 @@ set -euo pipefail
 
 REPO="doggy8088/strreplace"
 BIN_NAME="strreplace"
-INSTALL_DIR="${INSTALL_DIR:-/usr/local/bin}"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -47,6 +47,9 @@ curl -fsSL "$DOWNLOAD_URL" -o "$TMP_FILE" || err "Download failed."
 # Install
 # ---------------------------------------------------------------------------
 INSTALL_PATH="${INSTALL_DIR}/${BIN_NAME}"
+
+# Create the target directory if it doesn't exist
+mkdir -p "$INSTALL_DIR"
 
 if [ ! -w "$INSTALL_DIR" ]; then
   info "Installing to ${INSTALL_PATH} (requires sudo) …"

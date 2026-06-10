@@ -10,7 +10,7 @@
 curl -fsSL https://raw.githubusercontent.com/doggy8088/strreplace/main/install.sh | bash
 ```
 
-此指令會自動下載最新版本並安裝至 `/usr/local/bin/strreplace`（如需 sudo 權限會自動提示）。
+此指令會自動下載最新版本並安裝至 `$HOME/.local/bin/strreplace`（目錄不存在時會自動建立；若指定其他需要 sudo 的路徑，會自動提示）。
 
 ### 手動安裝
 
