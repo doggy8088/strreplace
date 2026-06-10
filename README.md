@@ -25,7 +25,7 @@ chmod +x /usr/local/bin/strreplace
 ## 使用方式
 
 ```
-strreplace [選項] <模式> <取代字串> <檔案|glob> [<檔案|glob> ...]
+strreplace [選項] <模式> <取代字串> <檔案|資料夾|glob> [<檔案|資料夾|glob> ...]
 ```
 
 ### 位置參數
