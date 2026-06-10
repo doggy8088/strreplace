@@ -13,6 +13,9 @@ jobs:
     name: Create GitHub Release
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,3 +34,4 @@ jobs:
           name: Release ${{ steps.version.outputs.VERSION }}
           generate_release_notes: true
           files: strreplace.sh
+          token: ${{ secrets.GITHUB_TOKEN }}
