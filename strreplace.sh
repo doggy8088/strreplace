@@ -103,7 +103,7 @@ ${C_BOLD}OPTIONS${C_RESET}
   ${C_BOLD}    --exclude <glob>${C_RESET}        Skip files matching glob     (e.g. "*.min.js")
   ${C_BOLD}    --exclude-dir <name>${C_RESET}   Skip directories named <name> (e.g. ".git")
   ${C_BOLD}-h, --help${C_RESET}                Show this help message
-  ${C_BOLD}    --version${C_RESET}              Print version and exit
+  ${C_BOLD}-V, --version${C_RESET}             Print version and exit
 
 ${C_BOLD}REPLACEMENT SYNTAX${C_RESET}
   &             Entire match (same as \0 in some engines)
@@ -173,7 +173,7 @@ parse_args() {
       --exclude-dir)        OPT_EXCLUDE_DIR="${OPT_EXCLUDE_DIR:+${OPT_EXCLUDE_DIR} }$2"; shift 2 ;;
       --exclude-dir=*)      OPT_EXCLUDE_DIR="${OPT_EXCLUDE_DIR:+${OPT_EXCLUDE_DIR} }${1#*=}"; shift ;;
       -h|--help)            usage; exit 0 ;;
-      --version)            echo "${SCRIPT_NAME} v${VERSION}"; exit 0 ;;
+      -V|--version)         echo "${SCRIPT_NAME} v${VERSION}"; exit 0 ;;
       --)                   shift; positional+=("$@"); break ;;
       -*)                   die "Unknown option: $1  (try --help)" ;;
       *)                    positional+=("$1"); shift ;;

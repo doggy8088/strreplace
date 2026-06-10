@@ -55,7 +55,7 @@ strreplace [選項] <模式> <取代字串> <檔案|glob> [<檔案|glob> ...]
 | `--exclude <glob>` | 跳過符合 glob 的檔案（例如 `*.min.js`） |
 | `--exclude-dir <名稱>` | 跳過符合名稱的目錄（例如 `.git`） |
 | `-h, --help` | 顯示說明訊息 |
-| `--version` | 印出版本並結束 |
+| `-V, --version` | 印出版本並結束 |
 
 ## 取代語法
 
