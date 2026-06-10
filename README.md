@@ -34,7 +34,7 @@ strreplace [選項] <模式> <取代字串> <檔案|glob> [<檔案|glob> ...]
 |---|---|
 | `<模式>` | ERE 正規表示式模式（或搭配 `--literal` 使用字面字串） |
 | `<取代字串>` | 取代字串；支援捕捉群組（`\1`、`\2`、…） |
-| `<檔案\|glob>` | 一個或多個檔案路徑或 Glob 模式 |
+| `<檔案\|資料夾\|glob>` | 一個或多個檔案路徑、資料夾或 Glob 模式 |
 
 ### 選項
 
@@ -97,6 +97,12 @@ strreplace -C "TODO" "FIXME" src/**/*.py
 
 # 詳細乾跑模式並顯示差異預覽
 strreplace -n -v "old_func" "new_func" lib/*.sh
+
+# 在當前目錄的所有檔案中取代（非遞迴）
+strreplace foo bar .
+
+# 遞迴取代當前目錄底下所有檔案
+strreplace -r foo bar .
 ```
 
 ## 注意事項
