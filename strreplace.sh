@@ -18,7 +18,7 @@ set -euo pipefail
 # Constants
 # ---------------------------------------------------------------------------
 readonly SCRIPT_NAME="$(basename "$0")"
-readonly VERSION="1.0.0"
+readonly VERSION="0.1.0"
 # Use a rarely-seen control character (SOH = \x01) as the sed delimiter to
 # safely handle patterns/replacements that contain '/', '|', or '#'.
 readonly SED_DELIM=$'\x01'
@@ -175,7 +175,15 @@ parse_args() {
       -h|--help)            usage; exit 0 ;;
       -V|--version)         echo "${SCRIPT_NAME} v${VERSION}"; exit 0 ;;
       --)                   shift; positional+=("$@"); break ;;
-      -*)                   die "Unknown option: $1  (try --help)" ;;
+      -*)
+        # If pattern and replacement are already collected, a dash-prefixed
+        # argument is a file/glob (e.g. the replacement was '--acp'), not a flag.
+        if [[ ${#positional[@]} -ge 1 ]]; then
+          positional+=("$1"); shift
+        else
+          die "Unknown option: $1  (try --help)"
+        fi
+        ;;
       *)                    positional+=("$1"); shift ;;
     esac
   done
@@ -273,11 +281,15 @@ declare -a TARGET_FILES=()
 collect_files() {
   local arg path
   for arg in "${FILE_ARGS[@]}"; do
-    # Use eval to allow shell glob expansion in arg
     local -a expanded=()
-    while IFS= read -r -d '' f; do
-      expanded+=("$f")
-    done < <(eval 'for p in '"$arg"'; do [[ -e "$p" ]] && printf "%s\0" "$p"; done' 2>/dev/null || true)
+    if [[ -e "$arg" ]]; then
+      expanded+=("$arg")
+    else
+      # Use eval to allow shell glob expansion in arg
+      while IFS= read -r -d '' f; do
+        expanded+=("$f")
+      done < <(eval 'for p in '"$arg"'; do [[ -e "$p" ]] && printf "%s\0" "$p"; done' 2>/dev/null || true)
+    fi
 
     if [[ ${#expanded[@]} -eq 0 ]]; then
       warn "No match for: $arg"
