@@ -4,6 +4,16 @@
 
 ## 安裝
 
+### 一行安裝（推薦）
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/doggy8088/strreplace/main/install.sh | bash
+```
+
+此指令會自動下載最新版本並安裝至 `/usr/local/bin/strreplace`（如需 sudo 權限會自動提示）。
+
+### 手動安裝
+
 ```bash
 # 複製到 PATH 中的任意位置
 cp strreplace.sh /usr/local/bin/strreplace
