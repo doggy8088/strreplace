@@ -1,107 +1,106 @@
-# strreplace — String/Regex Replace CLI Tool
+# strreplace — 字串／正規表示式取代 CLI 工具
 
-A powerful, portable bash script for replacing strings or regex patterns across
-one or more files with glob support and recursive traversal.
+一個強大且可攜式的 Bash 腳本，用於在一個或多個檔案中取代字串或正規表示式模式，支援 Glob 模式與遞迴目錄走訪。
 
-## Installation
+## 安裝
 
 ```bash
-# Copy to somewhere on your PATH
+# 複製到 PATH 中的任意位置
 cp strreplace.sh /usr/local/bin/strreplace
 chmod +x /usr/local/bin/strreplace
 ```
 
-Or just use it directly with `bash strreplace.sh ...`.
+或直接使用 `bash strreplace.sh ...` 執行。
 
-## Usage
+## 使用方式
 
 ```
-strreplace [OPTIONS] <pattern> <replacement> <file|glob> [<file|glob> ...]
+strreplace [選項] <模式> <取代字串> <檔案|glob> [<檔案|glob> ...]
 ```
 
-### Positional Arguments
+### 位置參數
 
-| Argument | Description |
+| 參數 | 說明 |
 |---|---|
-| `<pattern>` | ERE regex pattern (or literal string with `--literal`) |
-| `<replacement>` | Replacement string; supports capture groups (`\1`, `\2`, …) |
-| `<file\|glob>` | One or more file paths or glob patterns |
+| `<模式>` | ERE 正規表示式模式（或搭配 `--literal` 使用字面字串） |
+| `<取代字串>` | 取代字串；支援捕捉群組（`\1`、`\2`、…） |
+| `<檔案\|glob>` | 一個或多個檔案路徑或 Glob 模式 |
 
-### Options
+### 選項
 
-| Flag | Description |
+| 旗標 | 說明 |
 |---|---|
-| `-r, --recursive` | Recurse into directories |
-| `-n, --dry-run` | Show what would change, but don't modify files |
-| `-v, --verbose` | Print extra debug information |
-| `-q, --quiet` | Suppress all non-error output |
-| `-i, --ignore-case` | Case-insensitive matching |
-| `-l, --literal` | Treat pattern as a literal string (no regex) |
-| `-b, --backup` | Create a backup of each modified file (default suffix: `.bak`) |
-| `--backup-suffix <sfx>` | Custom backup file suffix |
-| `-c, --confirm` | Ask for confirmation before each file |
-| `-C, --count` | Print number of replacements per file |
-| `--max-depth <n>` | Maximum recursion depth (requires `-r`) |
-| `--include <glob>` | Only process files matching glob (e.g. `*.txt`) |
-| `--exclude <glob>` | Skip files matching glob (e.g. `*.min.js`) |
-| `--exclude-dir <name>` | Skip directories matching name (e.g. `.git`) |
-| `-h, --help` | Show help message |
-| `--version` | Print version and exit |
+| `-r, --recursive` | 遞迴進入子目錄 |
+| `-n, --dry-run` | 顯示將進行的變更，但不實際修改檔案 |
+| `-v, --verbose` | 輸出額外的除錯資訊 |
+| `-q, --quiet` | 隱藏所有非錯誤輸出 |
+| `-i, --ignore-case` | 不區分大小寫比對 |
+| `-l, --literal` | 將模式視為字面字串（不使用正規表示式） |
+| `-b, --backup` | 為每個修改的檔案建立備份（預設後綴：`.bak`） |
+| `--backup-suffix <後綴>` | 自訂備份檔案後綴 |
+| `-c, --confirm` | 在處理每個檔案前詢問確認 |
+| `-C, --count` | 印出每個檔案的取代次數 |
+| `--max-depth <n>` | 最大遞迴深度（需搭配 `-r` 使用） |
+| `--include <glob>` | 僅處理符合 glob 的檔案（例如 `*.txt`） |
+| `--exclude <glob>` | 跳過符合 glob 的檔案（例如 `*.min.js`） |
+| `--exclude-dir <名稱>` | 跳過符合名稱的目錄（例如 `.git`） |
+| `-h, --help` | 顯示說明訊息 |
+| `--version` | 印出版本並結束 |
 
-## Replacement Syntax
+## 取代語法
 
-| Token | Meaning |
+| 符號 | 意義 |
 |---|---|
-| `&` | Entire match |
-| `\1` … `\9` | Capture group back-references (ERE) |
+| `&` | 整個比對結果 |
+| `\1` … `\9` | 捕捉群組反向參照（ERE） |
 
-## Examples
+## 範例
 
 ```bash
-# Replace "foo" with "bar" in all .txt files
+# 在所有 .txt 檔案中將「foo」取代為「bar」
 strreplace foo bar *.txt
 
-# Case-insensitive, recursive, with backup
+# 不區分大小寫、遞迴處理，並建立備份
 strreplace -r -i -b "hello world" "Hi there" ./src
 
-# Regex: reformat dates YYYY-MM-DD → DD-MM-YYYY with capture groups
+# 正規表示式：將日期格式 YYYY-MM-DD 重新格式化為 DD-MM-YYYY（使用捕捉群組）
 strreplace -r '([0-9]{4})-([0-9]{2})-([0-9]{2})' '\3-\2-\1' ./docs
 
-# Dry-run to preview changes without modifying files
+# 乾跑模式預覽變更而不修改檔案
 strreplace -n -r "v[0-9]+\.[0-9]+" "v2.0" .
 
-# Literal string (special regex chars are escaped automatically)
+# 字面字串（特殊正規表示式字元會自動跳脫）
 strreplace -l "foo.bar()" "baz.qux()" file.js
 
-# Recursive with multiple exclusions and file-type filter
+# 遞迴處理，搭配多個排除條件與檔案類型篩選
 strreplace -r \
   --exclude-dir node_modules \
   --exclude-dir .git \
   --include "*.ts" \
   "OldComponent" "NewComponent" ./src
 
-# URLs (slashes in pattern/replacement work fine)
+# URL（模式／取代字串中的斜線可正常使用）
 strreplace "http://old-api.com/v1" "https://new-api.com/v2" config.yaml
 
-# Count replacements per file
+# 統計每個檔案的取代次數
 strreplace -C "TODO" "FIXME" src/**/*.py
 
-# Verbose dry-run with diff preview
+# 詳細乾跑模式並顯示差異預覽
 strreplace -n -v "old_func" "new_func" lib/*.sh
 ```
 
-## Notes
+## 注意事項
 
-- Uses **Extended Regular Expressions (ERE)** — the same syntax as `grep -E`/`sed -E`
-- Binary files are **automatically skipped**
-- The internal sed delimiter is a control character (`\x01`), so `/`, `|`, `#`, etc. are **safe to use** in patterns and replacements without escaping
-- Supports both **GNU sed** (Linux) and **BSD sed** (macOS)
-- `--exclude-dir` can be specified **multiple times** for multiple exclusions
+- 使用**延伸正規表示式（ERE）** — 與 `grep -E`／`sed -E` 相同的語法
+- 二進位檔案會**自動跳過**
+- 內部 sed 分隔符號使用控制字元（`\x01`），因此 `/`、`|`、`#` 等字元在模式與取代字串中**無需跳脫**即可安全使用
+- 同時支援 **GNU sed**（Linux）與 **BSD sed**（macOS）
+- `--exclude-dir` 可**重複指定**以排除多個目錄
 
-## Running Tests
+## 執行測試
 
 ```bash
 bash test_strreplace.sh
 ```
 
-All 44 tests should pass (0 failures).
+所有 44 個測試皆應通過（0 個失敗）。
